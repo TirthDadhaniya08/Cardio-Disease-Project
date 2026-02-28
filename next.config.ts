@@ -1,16 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: '/api/proxy/:path*',
-        destination: process.env.NODE_ENV === 'development'
-          ? 'http://127.0.0.1:8000/:path*'
-          : '/api/:path*',
-      },
-    ]
-  },
+  // Empty config, API routes handled natively by Vercel Serverless Functions
 };
 
 export default nextConfig;

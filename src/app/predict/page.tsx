@@ -75,7 +75,7 @@ export default function PredictPage() {
         }
 
         try {
-            const response = await fetch("/api/proxy/predict", {
+            const response = await fetch("/api/predict", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
