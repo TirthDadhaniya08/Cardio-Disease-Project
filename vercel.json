@@ -2,7 +2,13 @@
     "builds": [
         {
             "src": "api/index.py",
-            "use": "@vercel/python"
+            "use": "@vercel/python",
+            "config": {
+                "includeFiles": [
+                    "../cardio_model_week3.pkl",
+                    "cardio_model_week3.pkl"
+                ]
+            }
         },
         {
             "src": "package.json",
