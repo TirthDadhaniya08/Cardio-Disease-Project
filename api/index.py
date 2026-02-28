@@ -2,7 +2,6 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
-import pandas as pd
 import numpy as np
 import os
 import sys
@@ -88,24 +87,38 @@ def predict(input_data: PredictionInput):
         
         # 2. Create Feature Vector
         # Order: ['gender', 'height', 'weight', 'ap_hi', 'ap_lo', 'cholesterol', 'gluc', 'smoke', 'alco', 'active', 'age_years', 'bmi', 'MAP']
-        features = pd.DataFrame([{
-            'gender': input_data.gender,
-            'height': input_data.height,
-            'weight': input_data.weight,
-            'ap_hi': input_data.ap_hi,
-            'ap_lo': input_data.ap_lo,
-            'cholesterol': input_data.cholesterol,
-            'gluc': input_data.gluc,
-            'smoke': input_data.smoke,
-            'alco': input_data.alco,
-            'active': input_data.active,
-            'age_years': age_years,
-            'bmi': bmi,
-            'MAP': map_value
-        }])
+        features = np.array([[
+            input_data.gender,
+            input_data.height,
+            input_data.weight,
+            input_data.ap_hi,
+            input_data.ap_lo,
+            input_data.cholesterol,
+            input_data.gluc,
+            input_data.smoke,
+            input_data.alco,
+            input_data.active,
+            age_years,
+            bmi,
+            map_value
+        ]])
         
-        # 3. Scaling
-        features_scaled = scaler.transform(features)
+        # 3. Scaling (Manual formulation to remove scikit-learn)
+        # These constants were extracted from the fitted StandardScaler in cardio_model_week3.pkl
+        SCALER_MEANS = np.array([
+            1.34699155e+00, 1.64402644e+02, 7.41306556e+01, 1.26630500e+02,
+            8.13068182e+01, 1.36629516e+00, 1.22636218e+00, 8.78496503e-02,
+            5.27935606e-02, 8.04177593e-01, 5.33058093e+01, 2.74739237e+01,
+            9.64147120e+01
+        ])
+        
+        SCALER_SCALES = np.array([
+            0.47601304, 7.96329989, 14.29615498, 16.62171395, 9.45291316,
+            0.68068297, 0.57276343, 0.28307612, 0.22362111, 0.39683245,
+            6.76348550, 5.31133134, 11.02801243
+        ])
+        
+        features_scaled = (features - SCALER_MEANS) / SCALER_SCALES
         
         # 4. Prediction
         prediction = model.predict(features_scaled)
