@@ -38,15 +38,14 @@ app.add_middleware(
 
 # Load Model and Scaler
 # Vercel serverless functions sometimes run from the project root instead of the api folder.
-# We will check both potential locations for the model file.
+# We moved the model file directly into the api/ folder to guarantee it gets bundled.
 base_dir = os.path.dirname(__file__)
 model_name = 'cardio_model_week3.pkl'
 
 path_options = [
-    os.path.join(base_dir, '..', model_name),          # Local dev: /api/../model.pkl
-    os.path.join(base_dir, model_name),                # Sometimes Vercel places it in same dir
-    os.path.join(os.getcwd(), model_name),             # Vercel cwd root
-    os.path.join(os.getcwd(), 'api', '..', model_name) # Explicit cwd relative
+    os.path.join(base_dir, model_name),                # Local dev / deployed: /api/model.pkl
+    os.path.join(os.getcwd(), 'api', model_name),      # Vercel cwd root
+    os.path.join(os.getcwd(), model_name),             # Vercel fallback
 ]
 
 MODEL_PATH = None
