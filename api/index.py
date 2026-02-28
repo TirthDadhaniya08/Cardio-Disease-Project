@@ -64,10 +64,12 @@ except Exception as e:
     # or you might choose to exit.
 
 @app.get("/")
+@app.get("/api")
 def home():
     return {"message": "Cardiovascular Disease Prediction API is running"}
 
 @app.post("/predict")
+@app.post("/api/predict")
 def predict(input_data: PredictionInput):
     if not model or not scaler:
         raise HTTPException(status_code=500, detail="Model is not loaded.")
