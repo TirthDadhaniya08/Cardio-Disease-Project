@@ -1,5 +1,6 @@
 fastapi
 uvicorn
+scikit-learn
 xgboost-cpu
 joblib
 python-multipart
